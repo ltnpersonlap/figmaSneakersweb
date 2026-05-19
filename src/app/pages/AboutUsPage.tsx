@@ -1,4 +1,6 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { SEOMetadata, SEO_PRESETS } from "../components/SEOMetadata";
+import { BreadcrumbSchema, ArticleSchema } from "../components/StructuredData";
 
 const STORE_IMG = "https://images.unsplash.com/photo-1637666573804-746f69e79463?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBzbmVha2VyJTIwc3RvcmUlMjBpbnRlcmlvciUyMGRlc2lnbnxlbnwxfHx8fDE3NzMzNjI1NzR8MA&ixlib=rb-4.1.0&q=80&w=1080";
 const TEAM_IMG  = "https://images.unsplash.com/photo-1586288280768-3d9abb7d42bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx5b3VuZyUyMHRlYW0lMjBmYXNoaW9uJTIwYnJhbmQlMjBzdGFydHVwJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzczMzYyNTc3fDA&ixlib=rb-4.1.0&q=80&w=1080";
@@ -40,11 +42,37 @@ const TEAM = [
 ];
 
 export function AboutUsPage() {
-  return (
-    <div className="pt-[65px] bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://zayzepzone.com";
+  const breadcrumbItems = [
+    { name: "Trang chủ", url: baseUrl },
+    { name: "Về chúng tôi", url: `${baseUrl}/ve-chung-toi` },
+  ];
 
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden" style={{ minHeight: "460px" }}>
+  return (
+    <>
+      {/* SEO & Structured Data */}
+      <SEOMetadata
+        title={SEO_PRESETS.about.title}
+        description={SEO_PRESETS.about.description}
+        keywords={SEO_PRESETS.about.keywords}
+        canonicalUrl={`${baseUrl}/ve-chung-toi`}
+        ogImage={STORE_IMG}
+        ogType="article"
+      />
+      <BreadcrumbSchema items={breadcrumbItems} />
+      <ArticleSchema
+        title="Về ZayZepZone - Câu chuyện thương hiệu giày sneakers"
+        description="Câu chuyện ra đời và phát triển của ZayZepZone từ năm 2019, mang đến giày sneakers chính hãng cho giới trẻ TP.HCM."
+        url={`${baseUrl}/ve-chung-toi`}
+        datePublished="2019-01-01"
+        dateModified="2026-05-13"
+        authorName="ZayZepZone Team"
+        images={[STORE_IMG, TEAM_IMG]}
+      />
+
+      <article className="pt-[65px] bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+        {/* ── HERO ── */}
+        <header className="relative overflow-hidden" style={{ minHeight: "460px" }}>
         <div className="absolute inset-0">
           <ImageWithFallback
             src={STORE_IMG}
@@ -85,7 +113,7 @@ export function AboutUsPage() {
             đến với giới trẻ TP.HCM — với giá cả hợp lí và dịch vụ tận tâm.
           </p>
         </div>
-      </section>
+      </header>
 
       {/* ── STATS ── */}
       <section
@@ -270,6 +298,7 @@ export function AboutUsPage() {
           </a>
         </div>
       </section>
-    </div>
+    </article>
+    </>
   );
 }

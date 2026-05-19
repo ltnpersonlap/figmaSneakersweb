@@ -4,6 +4,8 @@ import { toast, Toaster } from "sonner";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { PRODUCTS, BADGE_STYLE, formatVND, discountPct, getRelatedProducts } from "../data/products";
 import type { Product } from "../data/products";
+import { ProductSchema, BreadcrumbSchema } from "../components/StructuredData";
+import { SEOMetadata } from "../components/SEOMetadata";
 
 /* ─── Fly-to-cart ────────────────────────────────────────────── */
 function flyToCart(startRect: DOMRect, imageUrl: string) {
@@ -138,6 +140,15 @@ export function ProductDetailPage() {
 
   const badgeCfg = product.badge ? BADGE_STYLE[product.badge] : null;
 
+  // Build canonical URL and breadcrumb data
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://zayzepzone.com";
+  const canonicalUrl = `${baseUrl}/san-pham/${product.id}`;
+  const breadcrumbItems = [
+    { name: "Trang chủ", url: baseUrl },
+    { name: "Sản phẩm", url: `${baseUrl}/san-pham` },
+    { name: product.name, url: canonicalUrl },
+  ];
+
   function handleAddToCart() {
     if (!selectedSize) {
       toast.error("Vui lòng chọn size trước!", { icon: "📏", duration: 2000 });
@@ -159,8 +170,22 @@ export function ProductDetailPage() {
   }
 
   return (
-    <div className="pt-[65px] pb-32 md:pb-0" style={{ background: "#F8FAFF", fontFamily: "'Inter', sans-serif" }}>
-      <Toaster position="bottom-right" toastOptions={{ style: { fontFamily: "'Inter', sans-serif" } }} />
+    <>
+      {/* SEO & Structured Data */}
+      <SEOMetadata
+        title={product.name}
+        description={product.description}
+        keywords={`${product.name}, ${product.brand}, giày ${product.category.toLowerCase()}, sneakers ${product.brand}`}
+        canonicalUrl={canonicalUrl}
+        ogImage={product.image}
+        ogType="product"
+        author="ZayZepZone"
+      />
+      <ProductSchema product={product} url={canonicalUrl} />
+      <BreadcrumbSchema items={breadcrumbItems} />
+
+      <div className="pt-[65px] pb-32 md:pb-0" style={{ background: "#F8FAFF", fontFamily: "'Inter', sans-serif" }}>
+        <Toaster position="bottom-right" toastOptions={{ style: { fontFamily: "'Inter', sans-serif" } }} />
 
       {/* ── Breadcrumb ── */}
       <div className="px-4 md:px-10 py-4 max-w-7xl mx-auto">
@@ -614,5 +639,6 @@ export function ProductDetailPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -3,6 +3,8 @@ import { FilterBar, DEFAULT_FILTER, type FilterState } from "../components/Filte
 import { ProductGrid } from "../components/ProductGrid";
 import { SkeletonGrid } from "../components/SkeletonGrid";
 import { PRODUCTS, applyFilters } from "../data/products";
+import { SEOMetadata, SEO_PRESETS } from "../components/SEOMetadata";
+import { BreadcrumbSchema } from "../components/StructuredData";
 
 /* ─── URL Sync Developer Note ────────────────────────────────── */
 function DevNote() {
@@ -69,11 +71,27 @@ export function ProductsPage() {
   }, [filterState]);
 
   const resultCount = applyFilters(PRODUCTS, filterState).length;
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://zayzepzone.com";
+  const breadcrumbItems = [
+    { name: "Trang chủ", url: baseUrl },
+    { name: "Sản phẩm", url: `${baseUrl}/san-pham` },
+  ];
 
   return (
-    <div className="pt-[65px]" style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* Page header */}
-      <div
+    <>
+      {/* SEO & Structured Data */}
+      <SEOMetadata
+        title={SEO_PRESETS.products.title}
+        description={SEO_PRESETS.products.description}
+        keywords={SEO_PRESETS.products.keywords}
+        canonicalUrl={`${baseUrl}/san-pham`}
+        ogImage={`${baseUrl}/og-products.jpg`}
+      />
+      <BreadcrumbSchema items={breadcrumbItems} />
+
+      <article className="pt-[65px]" style={{ fontFamily: "'Inter', sans-serif" }}>
+        {/* Page header */}
+        <header
         className="px-6 md:px-10 py-10 md:py-14"
         style={{ background: "linear-gradient(135deg, #002472 0%, #0077CC 100%)" }}
       >
@@ -91,13 +109,16 @@ export function ProductsPage() {
             Khám phá hơn 500+ mẫu sneakers chính hãng – cập nhật liên tục.
           </p>
         </div>
-      </div>
+      </header>
 
       {/* Dev annotation */}
       <DevNote />
 
-      <FilterBar filterState={filterState} onChange={setFilterState} resultCount={resultCount} />
-      {showSkeleton ? <SkeletonGrid count={8} /> : <ProductGrid filterState={filterState} />}
-    </div>
+      <section aria-label="Bộ lọc và danh sách sản phẩm">
+        <FilterBar filterState={filterState} onChange={setFilterState} resultCount={resultCount} />
+        {showSkeleton ? <SkeletonGrid count={8} /> : <ProductGrid filterState={filterState} />}
+      </section>
+    </article>
+    </>
   );
 }

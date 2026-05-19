@@ -1,4 +1,6 @@
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { SEOMetadata, SEO_PRESETS } from "../components/SEOMetadata";
+import { BreadcrumbSchema } from "../components/StructuredData";
 
 const TREND_IMG   = "https://images.unsplash.com/photo-1730829807437-97fb05b2bcac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbmVha2VyJTIwc3RyZWV0d2VhciUyMHRyZW5kJTIwY29sbGVjdGlvbiUyMDIwMjR8ZW58MXx8fHwxNzczMzYyNTc0fDA&ixlib=rb-4.1.0&q=80&w=1080";
 const HYPE_IMG    = "https://images.unsplash.com/photo-1771710863119-04aca824c76d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbmVha2VyJTIwaHlwZSUyMGxpbWl0ZWQlMjBlZGl0aW9uJTIwZHJvcCUyMHVyYmFufGVufDF8fHx8MTc3MzM2MjU3N3ww&ixlib=rb-4.1.0&q=80&w=1080";
@@ -47,11 +49,28 @@ const WEEKLY = [
 ];
 
 export function TrendsPage() {
-  return (
-    <div className="pt-[65px] bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://zayzepzone.com";
+  const breadcrumbItems = [
+    { name: "Trang chủ", url: baseUrl },
+    { name: "Xu hướng", url: `${baseUrl}/xu-huong` },
+  ];
 
-      {/* ── HERO BANNER ── */}
-      <section className="relative overflow-hidden" style={{ minHeight: "420px" }}>
+  return (
+    <>
+      {/* SEO & Structured Data */}
+      <SEOMetadata
+        title={SEO_PRESETS.trends.title}
+        description={SEO_PRESETS.trends.description}
+        keywords={SEO_PRESETS.trends.keywords}
+        canonicalUrl={`${baseUrl}/xu-huong`}
+        ogImage={TREND_IMG}
+        ogType="article"
+      />
+      <BreadcrumbSchema items={breadcrumbItems} />
+
+      <article className="pt-[65px] bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+        {/* ── HERO BANNER ── */}
+        <header className="relative overflow-hidden" style={{ minHeight: "420px" }}>
         <div className="absolute inset-0">
           <ImageWithFallback
             src={TREND_IMG}
@@ -81,17 +100,17 @@ export function TrendsPage() {
             Cập nhật liên tục những style đang hot nhất tại TP.HCM — từ đường phố đến sân chơi.
           </p>
         </div>
-      </section>
+      </header>
 
       {/* ── TREND CARDS ── */}
-      <section className="py-14 px-6 md:px-10 bg-white" aria-label="Xu hướng nổi bật">
+      <section className="py-14 px-6 md:px-10 bg-white" aria-labelledby="trends-heading">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: "#FF6A00" }}>
                 Trends
               </p>
-              <h2 style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 900, color: "#111", letterSpacing: "-0.02em" }}>
+              <h2 id="trends-heading" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2rem)", fontWeight: 900, color: "#111", letterSpacing: "-0.02em" }}>
                 Đang <span style={{ color: "#0077CC" }}>trending</span>
               </h2>
             </div>
@@ -228,7 +247,7 @@ export function TrendsPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section
+      <aside
         className="py-16 px-6 md:px-10 text-center"
         style={{ background: "linear-gradient(135deg, #002472 0%, #0077CC 100%)" }}
       >
@@ -258,7 +277,8 @@ export function TrendsPage() {
             </button>
           </div>
         </div>
-      </section>
-    </div>
+      </aside>
+    </article>
+    </>
   );
 }
